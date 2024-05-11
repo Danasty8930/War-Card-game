@@ -1,0 +1,197 @@
+package newweek6;
+
+public class Card {
+	private int value;
+    private String name;
+
+    // Constructor
+    public Card(int value, String name) {
+        this.value = value;
+        this.name = name;
+    }
+
+    // Getters and Setters
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // Describe method
+    public void describe() {
+        System.out.println(name);
+    }
+}
+
+package newweek6;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+
+	
+
+public class Deck {
+	private List<Card> cards;
+
+    // Constructor
+    public Deck() {
+        cards = new ArrayList<>();
+        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+        String[] names = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+
+        for (String suit : suits) {
+            for (int i = 0; i < 13; i++) {
+                Card card = new Card(i + 2, names[i] + " of " + suit);
+                cards.add(card);
+            }
+        }
+    }
+
+    // Shuffle method
+    public void shuffle() {
+        Collections.shuffle(cards);
+    }
+
+    // Draw method
+    public Card draw() {
+        if (cards.size() == 0) {
+            return null; // No card left in the deck
+        }
+        return cards.remove(0);
+    }
+}
+package newweek6;
+ 
+import java.util.ArrayList;
+import java.util.List;
+
+
+
+public class Player {
+	private List<Card> hand;
+    private int score;
+    private String name;
+
+    // Constructor
+    public Player(String name) {
+        hand = new ArrayList<>();
+        score = 0;
+        this.name = name;
+    }
+
+    // Describe method
+    public void describe() {
+        System.out.println("Player: " + name);
+        for (Card card : hand) {
+            card.describe();
+        }
+    }
+
+    // Flip method
+    public Card flip() {
+        if (hand.size() == 0) {
+            return null; // No card left in the hand
+        }
+        return hand.remove(0);
+    }
+
+    // Draw method
+    public void draw(Deck deck) {
+        Card card = deck.draw();
+        if (card != null) {
+            hand.add(card);
+        } else {
+            System.out.println("No more cards in the deck!");
+        }
+    }
+
+    // Increment score method
+    public void incrementScore() {
+        score++;
+    }
+
+    // Getters
+    public int getScore() {
+        return score;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+}
+package newweek6;
+
+public class App {
+
+	public App() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		 // Instantiate a Deck and two Players
+        Deck deck = new Deck();
+        Player player1 = new Player("Player 1");
+        Player player2 = new Player("Player 2");
+
+        // Shuffle the deck
+        deck.shuffle();
+
+        // Draw cards for each player
+        for (int i = 0; i < 52; i++) {
+            player1.draw(deck);
+            player2.draw(deck);
+        }
+
+        // Compare the flipped cards and update scores
+        for (int i = 0; i < 26; i++) {
+            Card card1 = player1.flip();
+            Card card2 = player2.flip();
+
+            card1.describe();
+            card2.describe();
+
+            if (card1.getValue() > card2.getValue()) {
+                System.out.println(player1.getName() + " receives a point!");
+                player1.incrementScore();
+            } else if (card1.getValue() < card2.getValue()) {
+                System.out.println(player2.getName() + " receives a point!");
+                player2.incrementScore();
+            } else {
+                System.out.println("It's a tie! No point was awarded.");
+            }
+        }
+
+        // Compare final scores
+        int score1 = player1.getScore();
+        int score2 = player2.getScore();
+
+        // Print final scores and the winner
+        System.out.println("Final Score:");
+        System.out.println(player1.getName() + ": " + score1);
+        System.out.println(player2.getName() + ": " + score2);
+
+        if (score1 > score2) {
+            System.out.println(player1.getName() + " wins!");
+        } else if (score1 < score2) {
+            System.out.println(player2.getName() + " wins!");
+        } else {
+            System.out.println("It's a draw!");
+        }
+    }
+
+	}
+
